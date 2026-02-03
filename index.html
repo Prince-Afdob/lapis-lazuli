@@ -484,6 +484,11 @@
   </main>
   <div class="footer">© 2026 lapis lazuli — for you, always</div>
   <script>
+        // Set background music volume low on load
+        window.addEventListener('DOMContentLoaded', function() {
+          var bgMusic = document.getElementById('bgMusic');
+          if (bgMusic) bgMusic.volume = 0.35;
+        });
     // --- Home button logic ---
     const homeBtn = document.getElementById('homeBtn');
     function setHomeBtnState(selected) {
@@ -568,6 +573,12 @@
           setTimeout(() => {
             pwOverlay.style.display = 'none';
             document.body.style.overflow = '';
+            // Try to play background music after unlock (user interaction)
+            var bgMusic = document.getElementById('bgMusic');
+            if (bgMusic) {
+              bgMusic.volume = 0.15;
+              bgMusic.play().catch(()=>{});
+            }
           }, 400);
         }
         function checkPw() {
