@@ -8,6 +8,129 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <style>
+                                .day-nav-arrows {
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  gap: 1.2em;
+                                  margin: 0.5em 0 1em 0;
+                                }
+                                .arrow-btn {
+                                  background: var(--accent);
+                                  color: var(--primary);
+                                  border: none;
+                                  border-radius: 50%;
+                                  width: 2.3em;
+                                  height: 2.3em;
+                                  font-size: 1.5em;
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  cursor: pointer;
+                                  box-shadow: 0 2px 8px rgba(255,209,102,0.08);
+                                  transition: background 0.2s, color 0.2s, transform 0.15s;
+                                }
+                                .arrow-btn:disabled {
+                                  opacity: 0.4;
+                                  cursor: not-allowed;
+                                }
+                                .day-label {
+                                  font-size: 1.1em;
+                                  font-weight: bold;
+                                  color: var(--primary);
+                                  letter-spacing: 1px;
+                                  background: var(--nav-bg);
+                                  border-radius: 1em;
+                                  padding: 0.3em 1.2em;
+                                  box-shadow: 0 1px 4px rgba(91,127,255,0.07);
+                                }
+                                .unlock-timer {
+                                  color: #e57373;
+                                  font-size: 1em;
+                                  margin-top: 1em;
+                                  font-family: 'Quicksand', sans-serif;
+                                  display: flex;
+                                  align-items: center;
+                                  gap: 0.4em;
+                                  justify-content: center;
+                                }
+                            /* Animate mobile menu */
+                            .nav-mobile-panel {
+                              display: none;
+                              flex-direction: column;
+                              width: 100%;
+                              background: var(--nav-bg);
+                              border-radius: 0 0 1.5em 1.5em;
+                              box-shadow: 0 8px 32px 0 rgba(91,127,255,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.07);
+                              margin-top: 0.5em;
+                              padding-bottom: 0.5em;
+                              animation: slideDown 0.3s cubic-bezier(.4,1.4,.6,1);
+                            }
+                            @keyframes slideDown {
+                              from { opacity: 0; transform: translateY(-20px); }
+                              to { opacity: 1; transform: translateY(0); }
+                            }
+                            @media (max-width: 700px) {
+                              .nav-days, .theme-toggle {
+                                display: none !important;
+                              }
+                              .navbar.expanded .nav-mobile-panel {
+                                display: flex;
+                              }
+                              .navbar-hamburger {
+                                display: block;
+                              }
+                            }
+                        /* Hamburger and mobile navbar */
+                        .navbar-hamburger {
+                          display: none;
+                          background: none;
+                          border: none;
+                          font-size: 2em;
+                          color: var(--primary);
+                          cursor: pointer;
+                          margin-right: 0.5em;
+                          z-index: 30;
+                        }
+                        @media (max-width: 700px) {
+                          .navbar {
+                            flex-direction: row;
+                            width: 97vw;
+                            max-width: 99vw;
+                            padding: 0.5em 0.5em 0.2em 0.5em;
+                          }
+                          .navbar-hamburger {
+                            display: block;
+                          }
+                          .nav-title {
+                            font-size: 1.1em;
+                          }
+                          .nav-days, .theme-toggle {
+                            display: none;
+                          }
+                          .navbar.expanded .nav-days,
+                          .navbar.expanded .theme-toggle {
+                            display: flex !important;
+                          }
+                          .navbar.expanded {
+                            flex-wrap: wrap;
+                            align-items: flex-start;
+                            box-shadow: 0 16px 48px 0 rgba(91,127,255,0.18), 0 2px 12px 0 rgba(0,0,0,0.10);
+                            background: var(--nav-bg);
+                          }
+                          .nav-days {
+                            flex-direction: column;
+                            width: 100%;
+                            margin: 0.5em 0 0.5em 0;
+                            gap: 0.3em;
+                            align-items: flex-start;
+                          }
+                          .theme-toggle {
+                            width: 100%;
+                            margin: 0.5em 0 0.5em 0;
+                            align-self: flex-start;
+                          }
+                        }
                     /* Theme toggle button */
                     .theme-toggle {
                       margin: 0.5em 0 0.2em 0;
@@ -29,42 +152,60 @@
                     }
                     /* Dark theme variables */
                     body.dark {
-                      --primary: #a7c7ff;
-                      --secondary: #2d3142;
-                      --accent: #ffd166;
-                      --bg: #23263a;
-                      --text: #e0e6f7;
+                      --primary: #b5d1ff;
+                      --secondary: #23263a;
+                      --accent: #ffe066;
+                      --bg: #181a26;
+                      --text: #f7faff;
                       --nav-bg: #23263a;
-                      --nav-active: #ffd166;
-                      --card-bg: #2d3142;
-                      --shadow: 0 4px 24px rgba(91,127,255,0.18);
+                      --nav-active: #ffe066;
+                      --card-bg: #23263a;
+                      --shadow: 0 4px 24px rgba(181,209,255,0.18);
                     }
                     body.dark .nav-day.home {
-                      background: #2d3142;
-                      color: var(--accent);
-                      border: 1.5px solid var(--accent);
+                      background: #23263a;
+                      color: #ffe066;
+                      border: 1.5px solid #ffe066;
+                      box-shadow: 0 2px 8px rgba(255,224,102,0.18);
                     }
                     body.dark .poem {
                       background: #23263a;
-                      color: #a7c7ff;
-                      border-left: 4px solid #ffd166;
+                      color: #b5d1ff;
+                      border-left: 4px solid #ffe066;
+                      box-shadow: 0 2px 12px rgba(181,209,255,0.13);
                     }
                     body.dark .pw-box {
-                      background: #2d3142;
-                      color: #a7c7ff;
+                      background: #23263a;
+                      color: #f7faff;
+                      box-shadow: 0 4px 24px rgba(181,209,255,0.18);
                     }
                     body.dark .pw-input {
-                      background: #23263a;
-                      color: #ffd166;
-                      border: 1.5px solid #ffd166;
+                      background: #181a26;
+                      color: #ffe066;
+                      border: 1.5px solid #ffe066;
                     }
                     body.dark .pw-btn {
-                      background: #ffd166;
+                      background: #ffe066;
                       color: #23263a;
+                      font-weight: bold;
                     }
                     body.dark .pw-btn:hover {
-                      background: #a7c7ff;
+                      background: #b5d1ff;
                       color: #23263a;
+                      background: #23263a;
+                      color: #f7faff;
+                      box-shadow: 0 4px 24px rgba(181,209,255,0.18);
+                      background: #23263a;
+                      color: #f7faff;
+                      box-shadow: 0 2px 8px rgba(181,209,255,0.13);
+                      color: #b5d1ff;
+                      background: #23263a;
+                      border: 1px solid #23263a;
+                      background: #ffe066;
+                      color: #23263a;
+                      font-weight: bold;
+                      background: #181a26;
+                      color: #b5d1ff;
                     }
                 .nav-day.home {
                   font-weight: bold;
@@ -175,14 +316,24 @@
     .navbar {
       background: var(--nav-bg);
       box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0.5em 0 0.2em 0;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+       display: flex;
+       flex-direction: row;
+       align-items: center;
+       justify-content: space-between;
+       width: 85vw;
+       max-width: 80vw;
+       margin: 1.2em auto 0 auto;
+       padding: 0.5em 1.2em 0.2em 1.2em;
+       border-radius: 1.5em;
+       box-shadow: 0 8px 32px 0 rgba(91,127,255,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.07);
+       background: var(--nav-bg);
+       position: sticky;
+       top: 0.7em;
+       z-index: 20;
+       transition: box-shadow 0.3s, background 0.3s;
     }
+      box-shadow: 0 16px 48px 0 rgba(91,127,255,0.18), 0 2px 12px 0 rgba(0,0,0,0.10);
+      background: var(--nav-bg);
     .nav-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 2em;
@@ -216,7 +367,7 @@
       outline: none;
     }
     .container {
-      max-width: 420px;
+      max-width: 85vw;
       margin: 1.5em auto 1em auto;
       background: var(--card-bg);
       border-radius: 18px;
@@ -283,24 +434,93 @@
       </div>
     </div>
   <nav class="navbar">
-      <button class="theme-toggle" id="themeToggle">🌙 Switch Theme</button>
+    <button class="navbar-hamburger" id="navbarHamburger" aria-label="Open menu">☰</button>
     <div class="nav-title">Lapis Lazuli</div>
-    <div class="nav-days" id="navDays"></div>
+    <button class="home-btn" id="homeBtn" type="button">Home</button>
+    <style>  
+        </style>  
+    <button class="theme-toggle" id="themeToggle" type="button">Switch Theme</button>
+    <style>
+          .home-btn {
+            margin: 0 0.7em;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 16px;
+            padding: 0.3em 1.2em;
+            font-size: 1em;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255,209,102,0.08);
+          }
+          .home-btn.selected, .home-btn:focus {
+            background: var(--primary);
+            color: #fff;
+            outline: none;
+          }
+          </style>
   </nav>
   <main class="container">
     <div class="day-content" id="dayContent"></div>
   </main>
   <div class="footer">© 2026 lapis lazuli — for you, always</div>
   <script>
+    // --- Home button logic ---
+    const homeBtn = document.getElementById('homeBtn');
+    function setHomeBtnState(selected) {
+      if (selected) {
+        homeBtn.classList.add('selected');
+      } else {
+        homeBtn.classList.remove('selected');
+      }
+    }
+    if (homeBtn) {
+      homeBtn.onclick = () => {
+        showHome();
+        setHomeBtnState(true);
+      };
+    }
+                // --- Hamburger/collapse logic ---
+    const navbar = document.querySelector('.navbar');
+    const hamburger = document.getElementById('navbarHamburger');
+    const navMobilePanel = document.getElementById('navMobilePanel');
+    function closeNavbarOnClickOutside(e) {
+      if (window.innerWidth > 700) return;
+      if (!navbar.contains(e.target) && navbar.classList.contains('expanded')) {
+        navbar.classList.remove('expanded');
+      }
+    }
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        navbar.classList.toggle('expanded');
+        if (navbar.classList.contains('expanded') && navMobilePanel) {
+          const navDays = navMobilePanel.querySelector('.nav-days');
+          if (navDays) navDays.focus();
+        }
+      });
+    }
+    if (navMobilePanel) {
+      navMobilePanel.addEventListener('click', (e) => {
+        if (e.target.classList.contains('nav-day')) {
+          setTimeout(() => navbar.classList.remove('expanded'), 200);
+        }
+      });
+    }
+    document.addEventListener('click', closeNavbarOnClickOutside);
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 700) navbar.classList.remove('expanded');
+    });
             // --- Theme toggle logic ---
             const themeToggle = document.getElementById('themeToggle');
             function setTheme(dark) {
               if (dark) {
                 document.body.classList.add('dark');
-                themeToggle.innerHTML = '☀️ Switch Theme';
+                themeToggle.innerHTML = 'Switch Theme';
               } else {
                 document.body.classList.remove('dark');
-                themeToggle.innerHTML = '🌙 Switch Theme';
+                themeToggle.innerHTML = 'Switch Theme';
               }
               localStorage.setItem('lapis-theme', dark ? 'dark' : 'light');
             }
@@ -319,18 +539,23 @@
         const pwInput = document.getElementById('pwInput');
         const pwBtn = document.getElementById('pwBtn');
         const pwError = document.getElementById('pwError');
-        const SECRET = 'lapis2026'; // You can change this password
+        const SECRET = 'sakshimishra'; // You can change this password
         function showError() {
           pwError.innerHTML = "You are not Lapis Lazuli <span style='font-size:1.3em;'>🧸</span>";
           pwError.style.display = '';
           pwInput.value = '';
           pwInput.focus();
         }
+        function unlockSite() {
+          pwOverlay.style.opacity = '0';
+          setTimeout(() => {
+            pwOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+          }, 400);
+        }
         function checkPw() {
           if (pwInput.value === SECRET) {
-            pwOverlay.style.opacity = '0';
-            setTimeout(() => { pwOverlay.style.display = 'none'; }, 400);
-            document.body.style.overflow = '';
+            unlockSite();
           } else {
             showError();
           }
@@ -370,68 +595,54 @@
       'Feb 14': {
         emoji: '💙',
         poem: `Blue as lapis, deep and true,\nA secret world, just us two.`
-      },
-      'Feb 15': {
-        emoji: '✨',
-        poem: `A week of wonder, softly spun,\nA story told, but never done.`
       }
     };
     const days = Object.keys(dayData);
-    const navTabs = ['Home', ...days];
-    const navDays = document.getElementById('navDays');
     const dayContent = document.getElementById('dayContent');
-    let selectedDay = 'Home';
-    // --- Date lock logic ---
-    // Map day string to date for comparison
+    let currentDayIdx = 0;
+    const today = new Date(2026, 1, 3); // Feb 03, 2026
     function parseDay(dayStr) {
-      // e.g. 'Feb 08' => 2026-02-08
       const [mon, d] = dayStr.split(' ');
-      const month = {
-        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-      }[mon];
+      const month = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11}[mon];
       return new Date(2026, month, parseInt(d));
     }
-    // Today is Feb 03, 2026
-    const today = new Date(2026, 1, 3);
-    function renderNav() {
-      navDays.innerHTML = '';
-      navTabs.forEach(tab => {
-        const btn = document.createElement('button');
-        if (tab === 'Home') {
-          btn.className = 'nav-day home' + (selectedDay === 'Home' ? ' selected' : '');
-          btn.textContent = 'Home';
-          btn.onclick = () => { selectedDay = 'Home'; renderNav(); renderContent(); };
-        } else {
-          const dayDate = parseDay(tab);
-          let locked = dayDate > today;
-          btn.className = 'nav-day' + (locked ? ' locked' : '') + (tab === selectedDay ? ' selected' : '');
-          btn.innerHTML = tab + ' ' + (locked ? '<span class="lock-icon">🔒</span>' : '<span class="lock-icon">🔓</span>');
-          if (locked) {
-            btn.disabled = true;
-          } else {
-            btn.onclick = () => { selectedDay = tab; renderNav(); renderContent(); };
-          }
-        }
-        navDays.appendChild(btn);
-      });
-    }
-    function renderContent() {
-      if (selectedDay === 'Home') {
-        dayContent.innerHTML = `
-          <div class="cute-emoji">💎</div>
-          <div class="poem" style="color:#5b7fff; background:#f7faff; border-left:4px solid #ffd166;">Welcome to <b>Lapis Lazuli</b>!<br><span style='color:#7c4dff;'>A cozy, secret space for you.<br>Each day, a new page will unlock.<br>Come back soon!</span></div>
-        `;
+    function showDay(idx) {
+      if (idx < 0 || idx >= days.length) return;
+      currentDayIdx = idx;
+      setHomeBtnState(false);
+      const day = days[idx];
+      const dayDate = parseDay(day);
+      const locked = dayDate > today;
+      let html = `<div class="day-nav-arrows">`;
+      html += `<button class="arrow-btn" id="leftArrow" ${idx===0?'disabled':''} aria-label="Previous">&#8592;</button>`;
+      html += `<span class="day-label">${day}</span>`;
+      html += `<button class="arrow-btn" id="rightArrow" ${idx===days.length-1?'disabled':''} aria-label="Next">&#8594;</button>`;
+      html += `</div>`;
+      if (locked) {
+        html += `<div class="unlock-timer" id="unlockTimer">🔒 Unlocks in ...</div>`;
+        dayContent.innerHTML = html;
+        document.getElementById('unlockTimer').textContent = `🔒 This page will unlock at the right time.`;
       } else {
-        const {emoji, poem} = dayData[selectedDay];
-        dayContent.innerHTML = `
-          <div class="cute-emoji">${emoji}</div>
-          <div class="poem">${poem.replace(/\n/g, '<br>')}</div>
-        `;
+        const {emoji, poem} = dayData[day];
+        html += `<div class="cute-emoji">${emoji}</div><div class="poem">${poem.replace(/\n/g, '<br>')}</div>`;
+        dayContent.innerHTML = html;
       }
+      document.getElementById('leftArrow').onclick = ()=>showDay(currentDayIdx-1);
+      document.getElementById('rightArrow').onclick = ()=>showDay(currentDayIdx+1);
     }
-    renderNav();
-    renderContent();
+    // Home tab logic
+    function showHome() {
+      dayContent.innerHTML = `
+        <div class="cute-emoji">💎</div>
+        <div class="poem" style="color:#5b7fff; background:#f7faff; border-left:4px solid #ffd166;">Welcome to <b>Lapis Lazuli</b>!<br><span style='color:#7c4dff;'>A cozy, secret space for you.<br>Each day, a new page will unlock.<br>Come back soon!</span></div>
+        <div class="day-nav-arrows"><button class="arrow-btn" id="rightArrow" aria-label="Next">&#8594;</button></div>
+      `;
+      setHomeBtnState(true);
+      document.getElementById('rightArrow').onclick = ()=>showDay(0);
+    }
+    // Initial load
+    let onHome = true;
+    showHome();
     // --- Playful floating particles (bubbles, hearts, stars) ---
     (function() {
       const canvas = document.createElement('canvas');
