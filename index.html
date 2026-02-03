@@ -10,6 +10,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <style>
+                                    /* Trip page button animation */
+                                    .trip-btns-rotating button {
+                                      animation: rotate-btn 1.2s linear infinite;
+                                    }
+                                    @keyframes rotate-btn {
+                                      0% { transform: rotate(0deg); }
+                                      100% { transform: rotate(360deg); }
+                                    }
+                                    .trip-meme {
+                                      display: flex;
+                                      justify-content: center;
+                                      margin-top: 1.5em;
+                                      animation: pop 1.2s infinite alternate cubic-bezier(.4,1.4,.6,1);
+                                    }
                                 .day-nav-arrows {
                                   display: flex;
                                   align-items: center;
@@ -437,7 +451,7 @@
     </div>
   <nav class="navbar">
     <button class="navbar-hamburger" id="navbarHamburger" aria-label="Open menu">☰</button>
-    <div class="nav-title">Lapis Lazuli</div>
+    <div class="nav-title"><b>Lapis Lazuli</b></div>
     <button class="home-btn" id="homeBtn" type="button">Home</button>
     <style>  
         </style>  
@@ -541,7 +555,7 @@
         const pwInput = document.getElementById('pwInput');
         const pwBtn = document.getElementById('pwBtn');
         const pwError = document.getElementById('pwError');
-        const SECRET = 'sakshimishra'; // You can change this password
+        const SECRET = 'sakshi'; // You can change this password
         function showError() {
           pwError.innerHTML = "You are not Lapis Lazuli <span style='font-size:1.3em;'>🧸</span>";
           pwError.style.display = '';
@@ -570,6 +584,10 @@
         });
     // Day data: subtle, poetic, introvert-friendly, cozy, cute
     const dayData = {
+      'You Got An Invitation': {
+        emoji: '🌄',
+        custom: true
+      },
       'Feb 08': {
         emoji: '🫧',
         poem: `A gentle start, like morning dew,\nA week of blue, just me and you.`
@@ -613,21 +631,53 @@
       currentDayIdx = idx;
       setHomeBtnState(false);
       const day = days[idx];
-      const dayDate = parseDay(day);
-      const locked = dayDate > today;
       let html = `<div class="day-nav-arrows">`;
       html += `<button class="arrow-btn" id="leftArrow" ${idx===0?'disabled':''} aria-label="Previous">&#8592;</button>`;
       html += `<span class="day-label">${day}</span>`;
       html += `<button class="arrow-btn" id="rightArrow" ${idx===days.length-1?'disabled':''} aria-label="Next">&#8594;</button>`;
       html += `</div>`;
-      if (locked) {
-        html += `<div class="unlock-timer" id="unlockTimer">🔒 Unlocks in ...</div>`;
+        if (dayData[day].custom) {
+          html += `<div class="cute-emoji">🌄</div><div class="poem" style="color:#5b7fff; background:#f7faff; border-left:4px solid #ffd166; font-size:1.2em;">Wanna Do a Trip, Together?</div><div class="trip-btns" style="display:flex;gap:1.5em;justify-content:center;margin-top:1.5em;"><button class="arrow-btn trip-btn" id="tripYes" style="width:4.5em;height:2.5em;font-size:1.1em;border-radius:1em; color: black;">YES</button><button class="arrow-btn trip-btn" id="tripSure" style="width:4.5em;height:2.5em;font-size:1.1em;border-radius:1em; color: black;">Why Not</button></div><div id="tripMeme"></div>`;
         dayContent.innerHTML = html;
-        document.getElementById('unlockTimer').textContent = `🔒 This page will unlock at the right time.`;
+          // Animation logic for trip page
+          const btnsDiv = document.querySelector('.trip-btns');
+          const memeDiv = document.getElementById('tripMeme');
+          const memeGifs = [
+            'https://media.tenor.com/LVeZa0OwoVgAAAAM/shock-shocked.gif',
+            'https://media.tenor.com/t0b1HNNbtYQAAAAM/mindblown-omg.gif',
+            'https://media.tenor.com/gbuyKqlBgo8AAAAM/chris-pratt-mind-blown.gif',
+            'https://media.tenor.com/QQNtnfVCfvUAAAAM/baby-scream-yeah.gif',
+            'https://media.tenor.com/GZtZgAQ0E4cAAAAM/excited-omg.gif',
+            'https://media.tenor.com/L6DcL1gsqW0AAAAM/sausagefest-herve.gif',
+            'https://media.tenor.com/0UBPrK-fmw0AAAAM/cool-fun.gif',
+            'https://i.imgur.com/KNfoQr3.gif',
+            'https://media.tenor.com/ksur9bTZJW8AAAAM/whoo-hoo.gif',
+            'https://media.tenor.com/kyxi84p8IbEAAAAM/ted2012-oh-my-god.gif'
+          ];
+          let lastIdx = -1;
+          function showMemeAndAnimate() {
+            let idx;
+            do {
+              idx = Math.floor(Math.random() * memeGifs.length);
+            } while (idx === lastIdx && memeGifs.length > 1);
+            lastIdx = idx;
+            memeDiv.innerHTML = `<div class="trip-meme"><img src="${memeGifs[idx]}" alt="Happy Meme" style="max-width:160px;border-radius:1em;box-shadow:0 2px 12px #5b7fff33;"></div>`;
+            btnsDiv.classList.add('trip-btns-rotating');
+          }
+          document.getElementById('tripYes').onclick = showMemeAndAnimate;
+          document.getElementById('tripSure').onclick = showMemeAndAnimate;
       } else {
-        const {emoji, poem} = dayData[day];
-        html += `<div class="cute-emoji">${emoji}</div><div class="poem">${poem.replace(/\n/g, '<br>')}</div>`;
-        dayContent.innerHTML = html;
+        const dayDate = parseDay(day);
+        const locked = dayDate > today;
+        if (locked) {
+          html += `<div class="unlock-timer" id="unlockTimer">🔒 Unlocks in ...</div>`;
+          dayContent.innerHTML = html;
+          document.getElementById('unlockTimer').textContent = `🔒 This page will unlock at the right time.`;
+        } else {
+          const {emoji, poem} = dayData[day];
+          html += `<div class="cute-emoji">${emoji}</div><div class="poem">${poem.replace(/\n/g, '<br>')}</div>`;
+          dayContent.innerHTML = html;
+        }
       }
       document.getElementById('leftArrow').onclick = ()=>showDay(currentDayIdx-1);
       document.getElementById('rightArrow').onclick = ()=>showDay(currentDayIdx+1);
