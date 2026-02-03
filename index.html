@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lapis lazuli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+                    /* Theme toggle button */
+                    .theme-toggle {
+                      margin: 0.5em 0 0.2em 0;
+                      background: var(--accent);
+                      color: var(--primary);
+                      border: none;
+                      border-radius: 16px;
+                      padding: 0.3em 1.2em;
+                      font-size: 1em;
+                      font-family: inherit;
+                      cursor: pointer;
+                      transition: background 0.2s, color 0.2s;
+                      font-weight: bold;
+                      box-shadow: 0 2px 8px rgba(255,209,102,0.08);
+                    }
+                    .theme-toggle:hover {
+                      background: var(--primary);
+                      color: #fff;
+                    }
+                    /* Dark theme variables */
+                    body.dark {
+                      --primary: #a7c7ff;
+                      --secondary: #2d3142;
+                      --accent: #ffd166;
+                      --bg: #23263a;
+                      --text: #e0e6f7;
+                      --nav-bg: #23263a;
+                      --nav-active: #ffd166;
+                      --card-bg: #2d3142;
+                      --shadow: 0 4px 24px rgba(91,127,255,0.18);
+                    }
+                    body.dark .nav-day.home {
+                      background: #2d3142;
+                      color: var(--accent);
+                      border: 1.5px solid var(--accent);
+                    }
+                    body.dark .poem {
+                      background: #23263a;
+                      color: #a7c7ff;
+                      border-left: 4px solid #ffd166;
+                    }
+                    body.dark .pw-box {
+                      background: #2d3142;
+                      color: #a7c7ff;
+                    }
+                    body.dark .pw-input {
+                      background: #23263a;
+                      color: #ffd166;
+                      border: 1.5px solid #ffd166;
+                    }
+                    body.dark .pw-btn {
+                      background: #ffd166;
+                      color: #23263a;
+                    }
+                    body.dark .pw-btn:hover {
+                      background: #a7c7ff;
+                      color: #23263a;
+                    }
+                .nav-day.home {
+                  font-weight: bold;
+                  color: var(--accent);
+                  background: #fffbe6;
+                  border: 1.5px solid var(--accent);
+                  box-shadow: 0 2px 8px rgba(255,209,102,0.08);
+                }
+            .nav-day.locked {
+              color: #b0b6c1;
+              background: #e3eafe;
+              cursor: not-allowed;
+              opacity: 0.7;
+              position: relative;
+            }
+            .nav-day .lock-icon {
+              font-size: 1em;
+              margin-left: 0.4em;
+              vertical-align: middle;
+              opacity: 0.8;
+            }
+        /* Password overlay styles */
+        .pw-overlay {
+          position: fixed;
+          z-index: 10000;
+          top: 0; left: 0; width: 100vw; height: 100vh;
+          background: rgba(247,250,255,0.98);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: opacity 0.4s;
+        }
+        .pw-box {
+          background: #fff;
+          border-radius: 18px;
+          box-shadow: 0 4px 24px rgba(91,127,255,0.13);
+          padding: 2em 2em 1.5em 2em;
+          text-align: center;
+          min-width: 240px;
+          max-width: 90vw;
+        }
+        .pw-box h2 {
+          color: var(--primary);
+          font-family: 'Montserrat', sans-serif;
+          font-size: 1.3em;
+          margin-bottom: 0.7em;
+        }
+        .pw-input {
+          font-size: 1.1em;
+          padding: 0.5em 1em;
+          border-radius: 8px;
+          border: 1.5px solid var(--primary);
+          margin-bottom: 1em;
+          outline: none;
+          width: 80%;
+          max-width: 220px;
+          transition: border 0.2s;
+        }
+        .pw-input:focus {
+          border: 1.5px solid var(--accent);
+        }
+        .pw-btn {
+          background: var(--primary);
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 0.5em 1.5em;
+          font-size: 1em;
+          cursor: pointer;
+          margin-top: 0.5em;
+          transition: background 0.2s;
+        }
+        .pw-btn:hover {
+          background: var(--accent);
+          color: var(--primary);
+        }
+        .pw-error {
+          color: #e57373;
+          font-size: 1.1em;
+          margin-top: 1em;
+          font-family: 'Quicksand', sans-serif;
+          display: flex;
+          align-items: center;
+          gap: 0.4em;
+          justify-content: center;
+        }
+    :root {
+      --primary: #5b7fff;
+      --secondary: #ffe6fa;
+      --accent: #ffd166;
+      --bg: #f7faff;
+      --text: #2d3142;
+      --nav-bg: #e3eafe;
+      --nav-active: #ffd166;
+      --card-bg: #fff;
+      --shadow: 0 4px 24px rgba(91,127,255,0.08);
+    }
+    html, body {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Quicksand', 'Montserrat', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+    .navbar {
+      background: var(--nav-bg);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5em 0 0.2em 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2em;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
+    }
+    .nav-days {
+      display: flex;
+      gap: 0.5em;
+      margin-bottom: 0.5em;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav-day {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 1em;
+      padding: 0.4em 1em;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+    .nav-day.selected, .nav-day:focus {
+      background: var(--nav-active);
+      color: #7c4dff;
+      font-weight: bold;
+      outline: none;
+    }
+    .container {
+      max-width: 420px;
+      margin: 1.5em auto 1em auto;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.5em 1.2em 2em 1.2em;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .day-content {
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      animation: fadeIn 0.7s cubic-bezier(.4,1.4,.6,1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .poem {
+      font-style: italic;
+      color: #7c4dff;
+      background: #f3f0ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      padding: 1em 1em 1em 1.2em;
+      margin: 0.5em 0;
+      font-size: 1.1em;
+      line-height: 1.7;
+      box-shadow: 0 2px 8px rgba(91,127,255,0.06);
+    }
+    .cute-emoji {
+      font-size: 2.2em;
+      margin-bottom: 0.2em;
+      animation: pop 1.2s infinite alternate cubic-bezier(.4,1.4,.6,1);
+    }
+    @keyframes pop {
+      from { transform: scale(1); }
+      to { transform: scale(1.13) rotate(-4deg); }
+    }
+    .footer {
+      text-align: center;
+      color: #b0b6c1;
+      font-size: 0.95em;
+      margin: 2em 0 1em 0;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 1em 0.5em 1.5em 0.5em; }
+      .nav-title { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+    <div class="pw-overlay" id="pwOverlay">
+      <div class="pw-box">
+        <h2>Welcome!<br>Enter the secret password</h2>
+        <input type="password" class="pw-input" id="pwInput" placeholder="Password..." autocomplete="off" />
+        <br>
+        <button class="pw-btn" id="pwBtn">Enter</button>
+        <div class="pw-error" id="pwError" style="display:none;"></div>
+      </div>
+    </div>
+  <nav class="navbar">
+      <button class="theme-toggle" id="themeToggle">🌙 Switch Theme</button>
+    <div class="nav-title">Lapis Lazuli</div>
+    <div class="nav-days" id="navDays"></div>
+  </nav>
+  <main class="container">
+    <div class="day-content" id="dayContent"></div>
+  </main>
+  <div class="footer">© 2026 lapis lazuli — for you, always</div>
+  <script>
+            // --- Theme toggle logic ---
+            const themeToggle = document.getElementById('themeToggle');
+            function setTheme(dark) {
+              if (dark) {
+                document.body.classList.add('dark');
+                themeToggle.innerHTML = '☀️ Switch Theme';
+              } else {
+                document.body.classList.remove('dark');
+                themeToggle.innerHTML = '🌙 Switch Theme';
+              }
+              localStorage.setItem('lapis-theme', dark ? 'dark' : 'light');
+            }
+            themeToggle.onclick = () => setTheme(!document.body.classList.contains('dark'));
+            // On load, set theme from localStorage or system preference
+            window.addEventListener('DOMContentLoaded', () => {
+              const saved = localStorage.getItem('lapis-theme');
+              if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                setTheme(true);
+              } else {
+                setTheme(false);
+              }
+            });
+        // --- Password overlay logic ---
+        const pwOverlay = document.getElementById('pwOverlay');
+        const pwInput = document.getElementById('pwInput');
+        const pwBtn = document.getElementById('pwBtn');
+        const pwError = document.getElementById('pwError');
+        const SECRET = 'lapis2026'; // You can change this password
+        function showError() {
+          pwError.innerHTML = "You are not Lapis Lazuli <span style='font-size:1.3em;'>🧸</span>";
+          pwError.style.display = '';
+          pwInput.value = '';
+          pwInput.focus();
+        }
+        function checkPw() {
+          if (pwInput.value === SECRET) {
+            pwOverlay.style.opacity = '0';
+            setTimeout(() => { pwOverlay.style.display = 'none'; }, 400);
+            document.body.style.overflow = '';
+          } else {
+            showError();
+          }
+        }
+        pwBtn.onclick = checkPw;
+        pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
+        window.addEventListener('DOMContentLoaded', () => {
+          pwInput.focus();
+          document.body.style.overflow = 'hidden';
+        });
+    // Day data: subtle, poetic, introvert-friendly, cozy, cute
+    const dayData = {
+      'Feb 08': {
+        emoji: '🫧',
+        poem: `A gentle start, like morning dew,\nA week of blue, just me and you.`
+      },
+      'Feb 09': {
+        emoji: '🧸',
+        poem: `Soft words, a cozy nook,\nQuiet laughter, a knowing look.`
+      },
+      'Feb 10': {
+        emoji: '🌙',
+        poem: `Moonlit thoughts, a silent tune,\nComfort found beneath the moon.`
+      },
+      'Feb 11': {
+        emoji: '🌱',
+        poem: `New leaves, a hopeful green,\nSmall joys in spaces in-between.`
+      },
+      'Feb 12': {
+        emoji: '🦋',
+        poem: `Fluttering hearts, a gentle breeze,\nMagic in the simplest ease.`
+      },
+      'Feb 13': {
+        emoji: '☕',
+        poem: `Warm mugs, a quiet day,\nWords unspoken, hearts that stay.`
+      },
+      'Feb 14': {
+        emoji: '💙',
+        poem: `Blue as lapis, deep and true,\nA secret world, just us two.`
+      },
+      'Feb 15': {
+        emoji: '✨',
+        poem: `A week of wonder, softly spun,\nA story told, but never done.`
+      }
+    };
+    const days = Object.keys(dayData);
+    const navTabs = ['Home', ...days];
+    const navDays = document.getElementById('navDays');
+    const dayContent = document.getElementById('dayContent');
+    let selectedDay = 'Home';
+    // --- Date lock logic ---
+    // Map day string to date for comparison
+    function parseDay(dayStr) {
+      // e.g. 'Feb 08' => 2026-02-08
+      const [mon, d] = dayStr.split(' ');
+      const month = {
+        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+      }[mon];
+      return new Date(2026, month, parseInt(d));
+    }
+    // Today is Feb 03, 2026
+    const today = new Date(2026, 1, 3);
+    function renderNav() {
+      navDays.innerHTML = '';
+      navTabs.forEach(tab => {
+        const btn = document.createElement('button');
+        if (tab === 'Home') {
+          btn.className = 'nav-day home' + (selectedDay === 'Home' ? ' selected' : '');
+          btn.textContent = 'Home';
+          btn.onclick = () => { selectedDay = 'Home'; renderNav(); renderContent(); };
+        } else {
+          const dayDate = parseDay(tab);
+          let locked = dayDate > today;
+          btn.className = 'nav-day' + (locked ? ' locked' : '') + (tab === selectedDay ? ' selected' : '');
+          btn.innerHTML = tab + ' ' + (locked ? '<span class="lock-icon">🔒</span>' : '<span class="lock-icon">🔓</span>');
+          if (locked) {
+            btn.disabled = true;
+          } else {
+            btn.onclick = () => { selectedDay = tab; renderNav(); renderContent(); };
+          }
+        }
+        navDays.appendChild(btn);
+      });
+    }
+    function renderContent() {
+      if (selectedDay === 'Home') {
+        dayContent.innerHTML = `
+          <div class="cute-emoji">💎</div>
+          <div class="poem" style="color:#5b7fff; background:#f7faff; border-left:4px solid #ffd166;">Welcome to <b>Lapis Lazuli</b>!<br><span style='color:#7c4dff;'>A cozy, secret space for you.<br>Each day, a new page will unlock.<br>Come back soon!</span></div>
+        `;
+      } else {
+        const {emoji, poem} = dayData[selectedDay];
+        dayContent.innerHTML = `
+          <div class="cute-emoji">${emoji}</div>
+          <div class="poem">${poem.replace(/\n/g, '<br>')}</div>
+        `;
+      }
+    }
+    renderNav();
+    renderContent();
+    // --- Playful floating particles (bubbles, hearts, stars) ---
+    (function() {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'particleCanvas';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
+      canvas.style.pointerEvents = 'none';
+      canvas.style.zIndex = '0';
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      let dpr = window.devicePixelRatio || 1;
+      let w = window.innerWidth, h = window.innerHeight;
+      function resize() {
+        w = window.innerWidth; h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      // Particle shapes: bubbles, hearts, stars
+      const shapes = [
+        { draw: (x, y, r) => { ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI); ctx.fillStyle = '#5b7fff'; ctx.fill(); ctx.globalAlpha = 1; } },
+        { draw: (x, y, r) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-Math.PI/4); ctx.scale(r/12, r/12); ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(0,-6,6,-12,12,0); ctx.bezierCurveTo(18,12,0,18,0,30); ctx.bezierCurveTo(0,18,-18,12,-12,0); ctx.bezierCurveTo(-6,-12,0,-6,0,0); ctx.closePath(); ctx.fillStyle = '#ffd166'; ctx.globalAlpha = 0.22; ctx.fill(); ctx.globalAlpha = 1; ctx.restore(); } },
+        { draw: (x, y, r) => { ctx.save(); ctx.translate(x, y); ctx.rotate(Math.PI/5); ctx.beginPath(); for(let i=0;i<5;i++){ctx.lineTo(Math.cos((18+i*72)/180*Math.PI)*r, -Math.sin((18+i*72)/180*Math.PI)*r);ctx.lineTo(Math.cos((54+i*72)/180*Math.PI)*r*0.5, -Math.sin((54+i*72)/180*Math.PI)*r*0.5);} ctx.closePath(); ctx.fillStyle = '#7c4dff'; ctx.globalAlpha = 0.16; ctx.fill(); ctx.globalAlpha = 1; ctx.restore(); } }
+      ];
+      const particles = [];
+      function spawn() {
+        if (particles.length < 22) {
+          const s = shapes[Math.floor(Math.random()*shapes.length)];
+          particles.push({
+            x: Math.random()*w,
+            y: h+30,
+            r: 12+Math.random()*18,
+            vy: -0.3-Math.random()*0.7,
+            vx: (Math.random()-0.5)*0.3,
+            shape: s,
+            alpha: 0.7+Math.random()*0.3
+          });
+        }
+      }
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        for (let p of particles) {
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          p.shape.draw(p.x, p.y, p.r);
+          ctx.restore();
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.0007;
+        }
+        for (let i=particles.length-1; i>=0; i--) {
+          if (particles[i].y < -40 || particles[i].alpha < 0.05) particles.splice(i,1);
+        }
+        spawn();
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+</body>
+</html>
